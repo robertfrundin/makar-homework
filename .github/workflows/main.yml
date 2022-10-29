@@ -1,5 +1,5 @@
 name: 'Push workflow'
-run-name: ${{ github.actor }} ${{github.event}}ed in ${{github.ref_type}} ${{ github.ref_name }}
+run-name: Push to ${{github.ref_type}} ${{ github.ref_name }} by ${{ github.actor }}
 
 on:
   workflow_dispatch:
