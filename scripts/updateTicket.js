@@ -14,6 +14,7 @@ async function main () {
         const author = github.context.payload.pusher.name;
         const description = getDescription(author);
 
+        console.log(OAUTH_TOKEN, ORG_ID, TICKET_ID)
         console.log(summary)
         console.log(description)
 
