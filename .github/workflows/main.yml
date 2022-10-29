@@ -61,5 +61,5 @@ jobs:
         env:
           OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
           ORG_ID: ${{ secrets.ORG_ID }}
-          TICKET_ID: ${{ TICKET_ID }}
+          TICKET_ID: ${{ secrets.TICKET_ID }}
         run: npm run update
