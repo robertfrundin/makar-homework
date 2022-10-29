@@ -1,7 +1,13 @@
 name: 'Push workflow'
 run-name: ${{ github.actor }} запушил в ветку ${{ github.ref_name }}
 
-on: [workflow_dispatch, push]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**'
+    tags:
+      - rc-0.0.*
 
 jobs:
   test:
