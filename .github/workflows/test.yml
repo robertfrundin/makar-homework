@@ -1,4 +1,4 @@
-name: 'Test workflow for linter and tests'
+name: 'Test workflows for linter and tests'
 run-name: ${{ github.actor }} is testing linter and tests
 
 on: [push]
