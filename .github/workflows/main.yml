@@ -1,5 +1,5 @@
 name: 'Push workflow'
-run-name: ${{ github.actor }} запушил в ветку ${{ github.ref_name }}
+run-name: ${{ github.actor }} ${{github.event}}ed in ${{github.ref_type}} ${{ github.ref_name }}
 
 on:
   workflow_dispatch:
