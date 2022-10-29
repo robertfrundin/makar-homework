@@ -1,0 +1,31 @@
+name: 'Test workflow for linter and tests'
+run-name: ${{ github.actor }} is testing linter and tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.16.0'
+      - name: 'Install dependencies'
+        run: npm ci
+
+      - name: 'Run tests'
+        run: npm test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.16.0'
+      - name: 'Install dependencies'
+        run: npm ci
+
+      - name: 'Run lint'
+        run: npm run lint
