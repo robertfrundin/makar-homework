@@ -8,7 +8,7 @@ async function main () {
     try {
         const { OAUTH_TOKEN, ORG_ID, TICKET_ID } = process.env;
 
-        const tag = `rc-0.0.0`
+        const tag = `rc-0.0.1`
         const summary = getSummary(tag);
 
         const author = github.context.payload.pusher.name;
