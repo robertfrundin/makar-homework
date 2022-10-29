@@ -4,6 +4,18 @@ run-name: ${{ github.actor }} запушил в ветку ${{ github.ref_name }
 on: [workflow_dispatch, push]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.16.0'
+      - name: 'Install dependencies'
+        run: npm ci
+      - name: 'Run tests'
+        run: npm test
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -13,17 +25,17 @@ jobs:
           node-version: '16.16.0'
       - name: 'Install dependencies'
         run: npm ci
-
       - name: 'Run lint'
         run: npm run lint
 
-  test:
-    needs: lint
+  typescript:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '16.16.0'
-      - name: 'Run tests'
-        run: npm test
+      - name: 'Install dependencies'
+        run: npm ci
+      - name: 'Run typescript compilation'
+        run: npm run ts
