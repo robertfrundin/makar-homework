@@ -72,7 +72,7 @@ async function getCommits(tagRange) {
         core.setFailed(error);
     }
 
-    console.log('Got output')
+    console.log(output);
     return output;
 }
 
