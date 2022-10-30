@@ -22,6 +22,10 @@ async function main() {
 
         const author = github.context.payload.pusher.name;
 
+        const description = `Отвественный за релиз: ${author} 
+        Коммиты, попавшие в релиз:
+        ${commits}`
+
         await fetch(`${API_URL}/issues/${TICKET_ID}`, {
             method: 'PATCH',
             headers: {
@@ -30,7 +34,7 @@ async function main() {
             },
             body: JSON.stringify({
                 summary: getSummary(currentTag),
-                description: getDescription(author, commits)
+                description
             })
         });
 
@@ -73,7 +77,7 @@ function getSummary(tag) {
 }
 
 function getDescription(author, commits) {
-    console.log(typeof commits);
-    console.log(commits)
-    return commits;
+    return `Отвественный за релиз: ${author}
+    Коммиты, попавшие в релиз:
+    ${commits}`
 }
