@@ -10,6 +10,12 @@ on:
       - rc-0.0.*
 
 jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'GitHun context dump'
+        run: echo '${{ toJSON(github) }}'
+
   test:
     runs-on: ubuntu-latest
     steps:
