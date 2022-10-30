@@ -22,12 +22,12 @@ async function main() {
 
         const author = github.context.payload.pusher.name;
 
-        const summary = getSummary(currentTag);
-        const description = getDescription(author, commits);
-
-        console.log(typeof commitLogs)
-        console.log(summary)
-        console.log(description)
+        // const summary = getSummary(currentTag);
+        // const description = getDescription(author, commits);
+        //
+        // console.log(typeof commitLogs)
+        // console.log(summary)
+        // console.log(description)
 
         await fetch(`${API_URL}/issues/${TICKET_ID}`, {
             method: 'PATCH',
@@ -36,8 +36,8 @@ async function main() {
                 'X-Org-ID': `${ORG_ID}`
             },
             body: JSON.stringify({
-                summary,
-                description
+                summary: getSummary(currentTag),
+                description: getDescription(author, commits)
             })
         });
 
