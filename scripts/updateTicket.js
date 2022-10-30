@@ -16,13 +16,12 @@ async function main() {
         const tagRange = releaseNumber === 1 ? `rc-0.0.1` : `rc-0.0.${releaseNumber - 1}...rc-0.0.${releaseNumber}`
         const commits = await getCommits(tagRange);
 
-        console.log(commits)
-
         const author = github.context.payload.pusher.name;
 
         const summary = getSummary(currentTag);
         const description = getDescription(author, commits);
 
+        console.log(commits)
         console.log(summary)
         console.log(description)
 
@@ -77,10 +76,7 @@ function getSummary(tag) {
 }
 
 function getDescription(author, commits) {
-    return (
-        `Отвественный за релиз: ${author}
-        
-        Коммиты, попавшие в релиз:
-        ${commits}`
-    )
+    return `Отвественный за релиз: ${author}
+    Коммиты, попавшие в релиз:
+    ${commits}`
 }
