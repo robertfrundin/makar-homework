@@ -22,13 +22,6 @@ async function main() {
 
         const author = github.context.payload.pusher.name;
 
-        // const summary = getSummary(currentTag);
-        // const description = getDescription(author, commits);
-        //
-        // console.log(typeof commitLogs)
-        // console.log(summary)
-        // console.log(description)
-
         await fetch(`${API_URL}/issues/${TICKET_ID}`, {
             method: 'PATCH',
             headers: {
