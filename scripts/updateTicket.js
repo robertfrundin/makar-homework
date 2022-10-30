@@ -73,8 +73,7 @@ function getSummary(tag) {
 }
 
 function getDescription(author, commits) {
+    console.log(typeof commits);
     console.log(commits)
-    return `Отвественный за релиз: ${author}
-    Коммиты, попавшие в релиз:
-    ${commits}`
+    return commits;
 }
