@@ -5,16 +5,16 @@ const fetch = require('node-fetch');
 
 const API_URL = `https://api.tracker.yandex.net/v2`;
 
-async function main () {
+async function main() {
     try {
-        const { OAUTH_TOKEN, ORG_ID, TICKET_ID } = process.env;
+        const {OAUTH_TOKEN, ORG_ID, TICKET_ID} = process.env;
 
         const ref = github.context.ref.split('/');
         const currentTag = ref.pop();
         const releaseNumber = getReleaseNumber(currentTag);
 
         const tagRange = releaseNumber === 1 ? `rc-0.0.1` : `rc-0.0.${releaseNumber - 1}...rc-0.0.${releaseNumber}`
-        const commits = await exec.exec('git', ['log', '--pretty=format:"%h %an %s"', tagRange]);
+        const commits = await getCommits(tagRange);
 
         console.log(commits)
 
@@ -45,15 +45,38 @@ async function main () {
 
 main();
 
-function getReleaseNumber (tag) {
+function getReleaseNumber(tag) {
     return Number(tag.split('.').pop());
 }
 
-function getSummary (tag) {
+async function getCommits(tagRange) {
+    let output = '';
+    let error = '';
+
+    const options = {};
+    options.listeners = {
+        stdout: (data) => {
+            output += data.toString();
+        },
+        stderr: (data) => {
+            error += data.toString();
+        }
+    }
+
+    await exec.exec('git', ['log', '--pretty=format:"%h %an %s"', tagRange]);
+
+    if (error !== '') {
+        core.setFailed(error);
+    }
+
+    return output;
+}
+
+function getSummary(tag) {
     return `Релиз ${tag} - ${new Date().toLocaleDateString()}`
 }
 
-function getDescription (author, commits) {
+function getDescription(author, commits) {
     return (
         `Отвественный за релиз: ${author}
         
