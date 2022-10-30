@@ -26,7 +26,6 @@ async function main() {
         const description = getDescription(author, commits);
 
         console.log(typeof commitLogs)
-        console.log(commits)
         console.log(summary)
         console.log(description)
 
@@ -81,6 +80,7 @@ function getSummary(tag) {
 }
 
 function getDescription(author, commits) {
+    console.log(commits)
     return `Отвественный за релиз: ${author}
     Коммиты, попавшие в релиз:
     ${commits}`
