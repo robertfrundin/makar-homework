@@ -14,13 +14,18 @@ async function main() {
         const releaseNumber = getReleaseNumber(currentTag);
 
         const tagRange = releaseNumber === 1 ? `rc-0.0.1` : `rc-0.0.${releaseNumber - 1}...rc-0.0.${releaseNumber}`
-        const commits = await getCommits(tagRange);
+        const commitLogs = await getCommits(tagRange);
+        const commits = commitLogs
+            .split('\n')
+            .map((commit) => commit.replaceAll('"', ''))
+            .join('\n');
 
         const author = github.context.payload.pusher.name;
 
         const summary = getSummary(currentTag);
         const description = getDescription(author, commits);
 
+        console.log(typeof commitLogs)
         console.log(commits)
         console.log(summary)
         console.log(description)
