@@ -15,6 +15,9 @@ async function main() {
 
         const tagRange = releaseNumber === 1 ? `rc-0.0.1` : `rc-0.0.${releaseNumber - 1}...rc-0.0.${releaseNumber}`
         const commitLogs = await getCommits(tagRange);
+
+        console.log('Commit logs:' + commitLogs)
+
         const commits = commitLogs
             .split('\n')
             .map((commit) => commit.replaceAll('"', ''))
@@ -69,6 +72,7 @@ async function getCommits(tagRange) {
         core.setFailed(error);
     }
 
+    console.log('Got output')
     return output;
 }
 
