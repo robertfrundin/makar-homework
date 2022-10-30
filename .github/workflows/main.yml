@@ -2,7 +2,6 @@ name: 'Push workflow'
 run-name: Push to ${{github.ref_type}} ${{ github.ref_name }} by ${{ github.actor }}
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - '**'
@@ -10,12 +9,6 @@ on:
       - rc-0.0.*
 
 jobs:
-  dump:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'GitHun context dump'
-        run: echo '${{ toJSON(github) }}'
-
   test:
     runs-on: ubuntu-latest
     steps:

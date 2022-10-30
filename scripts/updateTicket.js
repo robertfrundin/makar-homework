@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const exec = require('@actions/exec')
 const fetch = require('node-fetch');
 
 const API_URL = `https://api.tracker.yandex.net/v2`;
@@ -8,11 +9,19 @@ async function main () {
     try {
         const { OAUTH_TOKEN, ORG_ID, TICKET_ID } = process.env;
 
-        const tag = `rc-0.0.2`
-        const summary = getSummary(tag);
+        const ref = github.context.ref.split('/');
+        const currentTag = ref.pop();
+        const releaseNumber = getReleaseNumber(currentTag);
+
+        const tagRange = releaseNumber === 1 ? `rc-0.0.1` : `rc-0.0.${releaseNumber - 1}...rc-0.0.${releaseNumber}`
+        const commits = await exec.exec('git', ['log', '--pretty=format:"%h %an %s"', tagRange]);
+
+        console.log(commits)
 
         const author = github.context.payload.pusher.name;
-        const description = getDescription(author);
+
+        const summary = getSummary(currentTag);
+        const description = getDescription(author, commits);
 
         console.log(summary)
         console.log(description)
@@ -36,10 +45,19 @@ async function main () {
 
 main();
 
+function getReleaseNumber (tag) {
+    return Number(tag.split('.').pop());
+}
+
 function getSummary (tag) {
     return `Релиз ${tag} - ${new Date().toLocaleDateString()}`
 }
 
-function getDescription (author) {
-    return `Отвественный за релиз: ${author}`
+function getDescription (author, commits) {
+    return (
+        `Отвественный за релиз: ${author}
+        
+        Коммиты, попавшие в релиз:
+        ${commits}`
+    )
 }
