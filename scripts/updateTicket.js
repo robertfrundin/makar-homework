@@ -15,42 +15,42 @@ const HEADERS = {
 
 async function updateTicket() {
     try {
-        console.log('Getting current ref:');
+        console.log('1. Getting current ref:');
         const ref = github.context.ref;
         console.log(`Current ref: ${ref} \n`);
 
-        console.log('Getting current release tag and number:');
+        console.log('2. Getting current release tag and number:');
         const splitRef = github.context.ref.split('/');
         const currentTag = splitRef.pop();
         const releaseNumber = getReleaseNumber(currentTag);
         console.log(`Current release tag: ${currentTag}`);
         console.log(`Current release number: ${releaseNumber} \n`);
 
-        console.log('Forming tag range:');
+        console.log('3. Forming tag range:');
         const tagRange = releaseNumber === 1 ? `rc-0.0.1` : `rc-0.0.${releaseNumber - 1}...rc-0.0.${releaseNumber}`
-        console.log(`Tag range: ${tagRange}`);
+        console.log(`Tag range: ${tagRange} \n`);
 
-        console.log('Getting commits in tag range:');
+        console.log('4. Getting commits in tag range:');
         const commitLogs = await getCommits(tagRange);
         const commitsCount = commitLogs.split('\n').length;
-        console.log(`\n Commits count in tag range: ${commitsCount} \n`);
+        console.log(`\nCommits count in tag range: ${commitsCount} \n`);
 
-        console.log('Preparing commits for description:');
+        console.log('5. Preparing commits for description:');
         const preparedCommits = commitLogs.replaceAll('"', '');
         const initialCommit = commitLogs.split('\n')[0];
         const preparedCommit = preparedCommits.split('\n')[0];
         console.log(`before and after example: \n   ${initialCommit} -> ${preparedCommit}`);
 
-        console.log('Preparing summary:');
+        console.log('6. Preparing summary:');
         const summary = getSummary(currentTag);
         console.log(`   ${summary}`);
 
-        console.log('Preparing description:');
+        console.log('7. Preparing description:');
         const author = github.context.payload.pusher.name;
         const description = getDescription(author, preparedCommits);
         console.log(`   ${description}`);
 
-        console.log('Updating the ticket');
+        console.log('\n8. Updating the ticket \n');
         try {
            await setSummaryAndDescription(summary, description);
            console.log('Ticket updated successfully!');
@@ -100,8 +100,8 @@ function getSummary(tag) {
 function getDescription(author, commits) {
     return (
         `Отвественный за релиз: ${author}
-        Коммиты, попавшие в релиз:
-        ${commits}`
+    \nКоммиты, попавшие в релиз:
+    ${commits}`
     )
 
 }
