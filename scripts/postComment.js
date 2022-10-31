@@ -8,7 +8,7 @@ function getCommentText(tag) {
     return `Собрали образ с тегом ${tag}`;
 }
 
-function setComment(text) {
+function postComment(text) {
     return fetch(`${API_URL}/issues/${TICKET_ID}/comments`, {
         method: 'POST',
         headers: HEADERS,
@@ -18,24 +18,25 @@ function setComment(text) {
     });
 }
 
-async function postComment() {
+async function addComment() {
     try {
         console.log('1. Getting current ref:');
         const ref = github.context.ref;
         console.log(`Current ref: ${ref} \n`);
 
-        console.log('2. Getting current release tag and number:');
-        const splitRef = github.context.ref.split('/');
+        console.log('2. Getting current release tag:');
+        const splitRef = ref.split('/');
         const currentTag = splitRef.pop();
-        const releaseNumber = getReleaseNumber(currentTag);
         console.log(`Current release tag: ${currentTag}`);
-        console.log(`Current release number: ${releaseNumber} \n`);
 
         const commentText = getCommentText(currentTag);
 
+        console.log('\n8. Posting the comment to ticket \n');
         try {
-            await setComment(commentText);
+            await postComment(commentText);
+            console.log('Comment posted successfully!');
         } catch (error) {
+            console.log('Failed to post the comment :c');
             core.setFailed(error)
         }
     } catch (error) {
@@ -43,4 +44,4 @@ async function postComment() {
     }
 }
 
-postComment();
+addComment();

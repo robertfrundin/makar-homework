@@ -14,7 +14,7 @@ function getDescription(author, commits) {
 
 }
 
-function setSummaryAndDescription(summary, description) {
+function patchTicket(summary, description) {
     return fetch(`${API_URL}/issues/${TICKET_ID}`, {
         method: 'PATCH',
         headers: HEADERS,
@@ -32,7 +32,7 @@ async function updateTicket() {
         console.log(`Current ref: ${ref} \n`);
 
         console.log('2. Getting current release tag and number:');
-        const splitRef = github.context.ref.split('/');
+        const splitRef = ref.split('/');
         const currentTag = splitRef.pop();
         const releaseNumber = getReleaseNumber(currentTag);
         console.log(`Current release tag: ${currentTag}`);
@@ -64,10 +64,10 @@ async function updateTicket() {
 
         console.log('\n8. Updating the ticket \n');
         try {
-           await setSummaryAndDescription(summary, description);
+           await patchTicket(summary, description);
            console.log('Ticket updated successfully!');
         } catch (error) {
-            console.log('Unable to update the ticket');
+            console.log('Failed to update the ticket :c');
             core.setFailed(error);
         }
 
