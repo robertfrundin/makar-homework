@@ -27,7 +27,8 @@
     "ts": "./node_modules/.bin/tsc",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "update": "node ./scripts/updateTicket.js"
+    "update": "node ./scripts/updateTicket.js",
+    "post": "node ./scripts/postComment.js"
   },
   "eslintConfig": {
     "extends": [
