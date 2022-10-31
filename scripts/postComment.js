@@ -30,7 +30,7 @@ async function addComment() {
         console.log(`Current release tag: ${currentTag}\n`);
 
         console.log('3. Building a docker image with release tag:');
-        await buildDockerImage(currentTag);
+        buildDockerImage(currentTag);
 
         console.log('\n4. Preparing comment text');
         const commentText = getCommentText(currentTag);
@@ -42,10 +42,10 @@ async function addComment() {
             console.log('Comment posted successfully!');
         } catch (error) {
             console.log('Failed to post the comment :c');
-            core.setFailed(error)
+            core.setFailed(error);
         }
     } catch (error) {
-        core.setFailed(error.message)
+        core.setFailed(error.message);
     }
 }
 
