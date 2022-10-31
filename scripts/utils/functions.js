@@ -1,7 +1,7 @@
 const exec = require("@actions/exec");
 const core = require("@actions/core");
 
-export async function execCommand(command, args) {
+async function execCommand(command, args) {
     let output = '';
     let error = '';
 
@@ -22,4 +22,13 @@ export async function execCommand(command, args) {
     }
 
     return output;
+}
+
+function getReleaseNumber(tag) {
+    return Number(tag.split('.').pop());
+}
+
+module.exports = {
+    execCommand,
+    getReleaseNumber
 }
