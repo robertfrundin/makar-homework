@@ -27,13 +27,14 @@ async function addComment() {
         console.log('2. Getting current release tag:');
         const splitRef = ref.split('/');
         const currentTag = splitRef.pop();
-        console.log(`Current release tag: ${currentTag}`);
+        console.log(`Current release tag: ${currentTag}\n`);
 
         console.log('3. Building a docker image with release tag:');
         await buildDockerImage(currentTag);
 
-        console.log('4. Preparing comment text');
+        console.log('\n4. Preparing comment text');
         const commentText = getCommentText(currentTag);
+        console.log(`   ${commentText}`);
 
         console.log('\n8. Posting the comment to ticket \n');
         try {
