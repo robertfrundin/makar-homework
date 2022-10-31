@@ -1,16 +1,29 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const exec = require('@actions/exec')
 const fetch = require('node-fetch');
+const {getReleaseNumber} = require("./utils/getReleaseNumber");
+const {execCommand} = require("./utils/execCommand");
+const {API_URL, TICKET_ID, HEADERS} = require("./utils/constants");
 
 
-const {OAUTH_TOKEN, ORG_ID, TICKET_ID} = process.env;
+function getSummary(tag) {
+    return `Релиз ${tag} - ${new Date().toLocaleDateString()}`
+}
 
-const API_URL = `https://api.tracker.yandex.net/v2`;
+function getDescription(author, commits) {
+    return `Отвественный за релиз: ${author} \n\nКоммиты, попавшие в релиз:\n${commits}`
 
-const HEADERS = {
-    'Authorization': `OAuth ${OAUTH_TOKEN}`,
-    'X-Org-ID': `${ORG_ID}`
+}
+
+function setSummaryAndDescription(summary, description) {
+    return fetch(`${API_URL}/issues/${TICKET_ID}`, {
+        method: 'PATCH',
+        headers: HEADERS,
+        body: JSON.stringify({
+            summary,
+            description
+        })
+    });
 }
 
 async function updateTicket() {
@@ -31,7 +44,7 @@ async function updateTicket() {
         console.log(`Tag range: ${tagRange} \n`);
 
         console.log('4. Getting commits in tag range:');
-        const commitLogs = await getCommits(tagRange);
+        const commitLogs = await execCommand('git',  ['log', '--pretty=format:"%h %an %s"', tagRange]);
         const commitsCount = commitLogs.split('\n').length;
         console.log(`\nCommits count in tag range: ${commitsCount} \n`);
 
@@ -65,50 +78,3 @@ async function updateTicket() {
 }
 
 updateTicket();
-
-function getReleaseNumber(tag) {
-    return Number(tag.split('.').pop());
-}
-
-async function getCommits(tagRange) {
-    let commits = '';
-    let error = '';
-
-    const options = {};
-    options.listeners = {
-        stdout: (data) => {
-            commits += data.toString();
-        },
-        stderr: (data) => {
-            error += data.toString();
-        }
-    }
-
-    await exec.exec('git', ['log', '--pretty=format:"%h %an %s"', tagRange], options);
-
-    if (error !== '') {
-        core.setFailed(error);
-    }
-
-    return commits;
-}
-
-function getSummary(tag) {
-    return `Релиз ${tag} - ${new Date().toLocaleDateString()}`
-}
-
-function getDescription(author, commits) {
-    return `Отвественный за релиз: ${author} \n\nКоммиты, попавшие в релиз:\n${commits}`
-
-}
-
-function setSummaryAndDescription(summary, description) {
-    return fetch(`${API_URL}/issues/${TICKET_ID}`, {
-        method: 'PATCH',
-        headers: HEADERS,
-        body: JSON.stringify({
-            summary,
-            description
-        })
-    });
-}
