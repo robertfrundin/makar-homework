@@ -16,18 +16,16 @@ async function main() {
         const tagRange = releaseNumber === 1 ? `rc-0.0.1` : `rc-0.0.${releaseNumber - 1}...rc-0.0.${releaseNumber}`
         const commitLogs = await getCommits(tagRange);
 
-        console.log('Commit logs:' + commitLogs)
+        console.log('Commit logs: '+ commitLogs)
 
         const commits = commitLogs
             .split('\n')
             .map((commit) => commit.replaceAll('"', ''))
             .join('\n');
 
-        const author = github.context.payload.pusher.name;
+        console.log('Prepared commits: ' + commits)
 
-        const description = `Отвественный за релиз: ${author} 
-        Коммиты, попавшие в релиз:
-        ${commits}`
+        const author = github.context.payload.pusher.name;
 
         await fetch(`${API_URL}/issues/${TICKET_ID}`, {
             method: 'PATCH',
@@ -37,7 +35,7 @@ async function main() {
             },
             body: JSON.stringify({
                 summary: getSummary(currentTag),
-                description
+                description: getDescription(author, commits)
             })
         });
 
@@ -66,13 +64,12 @@ async function getCommits(tagRange) {
         }
     }
 
-    await exec.exec('git', ['log', '--pretty=format:"%h %an %s"', tagRange]);
+    await exec.exec('git', ['log', '--pretty=format:"%h %an %s"', tagRange], options);
 
     if (error !== '') {
         core.setFailed(error);
     }
 
-    console.log(output);
     return output;
 }
 
