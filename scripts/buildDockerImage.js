@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-import {execCommand} from "./utils/helpers";
+const {execCommand} = require("./utils/helpers");
 
 async function buildDockerImage(tag) {
     execCommand('docker', ['build', '-t', `app:${tag}`, '.'])
