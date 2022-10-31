@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require("@actions/github");
 const fetch = require("node-fetch");
 const {API_URL, TICKET_ID, HEADERS} = require("./utils/constants");
-const {buildDockerImage} = require("./buildDockerImage");
+const {execCommand} = require("./utils/helpers");
 
 function getCommentText(tag) {
     return `Собрали образ с тегом ${tag}`;
@@ -30,7 +30,12 @@ async function addComment() {
         console.log(`Current release tag: ${currentTag}\n`);
 
         console.log('3. Building a docker image with release tag:');
-        buildDockerImage(currentTag);
+        execCommand('docker', ['build', '-t', `app:${tag}`, '.'])
+            .then(() => console.log('Docker image built successfully!'))
+            .catch((error) => {
+                core.setFailed(error);
+                console.log('Failed to build a docker image :c');
+            });
 
         console.log('\n4. Preparing comment text');
         const commentText = getCommentText(currentTag);
