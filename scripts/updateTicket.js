@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const fetch = require('node-fetch');
-const {execCommand, getReleaseNumber} = require("./utils/functions");
+const {execCommand, getReleaseNumber} = require("./utils/helpers");
 const {API_URL, TICKET_ID, HEADERS} = require("./utils/constants");
 
 

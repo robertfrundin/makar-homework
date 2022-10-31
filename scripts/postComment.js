@@ -1,14 +1,14 @@
 const core = require('@actions/core');
 const github = require("@actions/github");
 const fetch = require("node-fetch");
-const {getReleaseNumber} = require("./utils/functions");
+const {getReleaseNumber} = require("./utils/helpers");
 const {API_URL, TICKET_ID, HEADERS} = require("./utils/constants");
 
 function getCommentText(tag) {
     return `Собрали образ с тегом ${tag}`;
 }
 
-function postComment(text) {
+function setComment(text) {
     return fetch(`${API_URL}/issues/${TICKET_ID}/comments`, {
         method: 'POST',
         headers: HEADERS,
@@ -18,7 +18,7 @@ function postComment(text) {
     });
 }
 
-async function updateTicket() {
+async function postComment() {
     try {
         console.log('1. Getting current ref:');
         const ref = github.context.ref;
@@ -34,7 +34,7 @@ async function updateTicket() {
         const commentText = getCommentText(currentTag);
 
         try {
-            await postComment(commentText);
+            await setComment(commentText);
         } catch (error) {
             core.setFailed(error)
         }
@@ -42,3 +42,5 @@ async function updateTicket() {
         core.setFailed(error.message)
     }
 }
+
+postComment();
