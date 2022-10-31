@@ -1,8 +1,8 @@
 const core = require('@actions/core');
 const github = require("@actions/github");
 const fetch = require("node-fetch");
-const {getReleaseNumber} = require("./utils/helpers");
 const {API_URL, TICKET_ID, HEADERS} = require("./utils/constants");
+const {buildDockerImage} = require("./buildDockerImage");
 
 function getCommentText(tag) {
     return `Собрали образ с тегом ${tag}`;
@@ -29,6 +29,10 @@ async function addComment() {
         const currentTag = splitRef.pop();
         console.log(`Current release tag: ${currentTag}`);
 
+        console.log('3. Building a docker image with release tag:');
+        await buildDockerImage(currentTag);
+
+        console.log('4. Preparing comment text');
         const commentText = getCommentText(currentTag);
 
         console.log('\n8. Posting the comment to ticket \n');
