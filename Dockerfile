@@ -12,4 +12,6 @@ COPY . ./
 
 RUN npm run build
 
+ENV NODE_ENV production
+
 CMD serve -s build -l 3000

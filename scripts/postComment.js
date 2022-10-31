@@ -37,7 +37,7 @@ async function addComment() {
         const commentText = getCommentText(currentTag);
         console.log(`   ${commentText}`);
 
-        console.log('\n8. Posting the comment to ticket \n');
+        console.log('\n5. Posting the comment to ticket \n');
         try {
             await postComment(commentText);
             console.log('Comment posted successfully!');
