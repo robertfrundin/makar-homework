@@ -41,11 +41,11 @@ async function updateTicket() {
         const preparedCommit = preparedCommits.split('\n')[0];
         console.log(`before and after example: \n   ${initialCommit} -> ${preparedCommit}`);
 
-        console.log('6. Preparing summary:');
+        console.log('\n6. Preparing summary:');
         const summary = getSummary(currentTag);
         console.log(`   ${summary}`);
 
-        console.log('7. Preparing description:');
+        console.log('\n7. Preparing description:');
         const author = github.context.payload.pusher.name;
         const description = getDescription(author, preparedCommits);
         console.log(`   ${description}`);
@@ -98,11 +98,7 @@ function getSummary(tag) {
 }
 
 function getDescription(author, commits) {
-    return (
-        `Отвественный за релиз: ${author}
-    \nКоммиты, попавшие в релиз:
-    ${commits}`
-    )
+    return `Отвественный за релиз: ${author} \n\nКоммиты, попавшие в релиз:\n${commits}`
 
 }
 
