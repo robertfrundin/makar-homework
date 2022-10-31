@@ -30,7 +30,7 @@ async function addComment() {
         console.log(`Current release tag: ${currentTag}\n`);
 
         console.log('3. Building a docker image with release tag:');
-        execCommand('docker', ['build', '-t', `app:${tag}`, '.'])
+        execCommand('docker', ['build', '-t', `app:${currentTag}`, '.'])
             .then(() => console.log('Docker image built successfully!'))
             .catch((error) => {
                 core.setFailed(error);
