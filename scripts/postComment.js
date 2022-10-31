@@ -2,10 +2,10 @@ const core = require('@actions/core');
 const github = require("@actions/github");
 const fetch = require("node-fetch");
 const {API_URL, TICKET_ID, HEADERS} = require("./utils/constants");
-const {execCommand} = require("./utils/helpers");
+const {execCommand, getReleaseNumber} = require("./utils/helpers");
 
-function getCommentText(tag) {
-    return `Собрали образ с тегом ${tag}`;
+function getCommentText(releaseNumber) {
+    return `Собрали образ с тегом rc:0.0.${releaseNumber}`;
 }
 
 function postComment(text) {
@@ -27,14 +27,16 @@ async function addComment() {
         console.log('2. Getting current release tag:');
         const splitRef = ref.split('/');
         const currentTag = splitRef.pop();
-        console.log(`Current release tag: ${currentTag}\n`);
+        const releaseNumber = getReleaseNumber(currentTag);
+        console.log(`Current release tag: ${currentTag}`);
+        console.log(`Current release number: ${releaseNumber} \n`);
 
         console.log('3. Building a docker image with release tag:');
-        await execCommand('docker', ['build', '-t', `app:${currentTag}`, '.'])
+        await execCommand('docker', ['build', '-t', `rc:0.0.${releaseNumber}`, '.'])
         console.log('Docker image was built successfully!');
 
         console.log('\n4. Preparing comment text');
-        const commentText = getCommentText(currentTag);
+        const commentText = getCommentText(releaseNumber);
         console.log(`   ${commentText}`);
 
         console.log('\n5. Posting the comment to ticket \n');
